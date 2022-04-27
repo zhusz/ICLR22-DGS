@@ -1,0 +1,14 @@
+numpy
+scipy
+opencv-python
+scikit-image
+scikit-video
+prettytable
+matplotlib
+easydict
+tensorboardX
+meshzoo
+plyfile
+ipdb
+dominate
+connected-components-3d
