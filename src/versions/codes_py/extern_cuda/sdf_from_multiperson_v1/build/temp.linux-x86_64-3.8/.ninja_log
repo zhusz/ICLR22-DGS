@@ -1,0 +1,3 @@
+# ninja log v5
+0	8112	1652471619013927674	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/sdf_from_multiperson_v1/build/temp.linux-x86_64-3.8/sdf_from_multiperson_v1/cuda/sdf_cuda_kernel.o	c93a6744edd3f9b0
+0	15449	1652471626353868791	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/sdf_from_multiperson_v1/build/temp.linux-x86_64-3.8/sdf_from_multiperson_v1/cuda/sdf_cuda.o	d27ee09ea1ca5e6e

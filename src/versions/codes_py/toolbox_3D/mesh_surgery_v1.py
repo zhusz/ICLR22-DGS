@@ -1,11 +1,3 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
 from matplotlib.cm import get_cmap
 import meshzoo
 import numpy as np
@@ -282,6 +274,8 @@ def create_lineArrow_mesh(rLine, rArrow, origin_xyz, terminal_xyz, color):
         R = np.eye(3).astype(np.float32) + Z + \
             (np.matmul(Z, Z)) * (1 - d) / (np.linalg.norm(c, ord=2) ** 2) / (np0 ** 2)
     R = R.astype(np.float32)
+    if np.linalg.det(R) > 0:  # The 1 case (the else is the -1 case)
+        f = f[:, [0, 2, 1]]
     v = np.matmul(v, R.transpose()) + origin_xyz[None, :]
     c = np.tile(color, [v.shape[0], 1])
     return v, f, c
@@ -326,6 +320,23 @@ def combineMultiShapes_withVertRgb(vtc0List):
     color0 = np.concatenate([x[2] for x in vtc0List], 0)
 
     return vert0, face0, color0
+
+
+def combineMultiShapes_withWhatever(vtwhatever0List):
+    nVertList = np.array([x[0].shape[0] for x in vtwhatever0List], dtype=np.int32)
+    nVertCumsumList = np.cumsum(nVertList)
+    nVertCumsumList = np.concatenate([
+        np.array([0], dtype=np.int32),
+        nVertCumsumList,
+    ], 0)
+
+    # combine
+    vert0 = np.concatenate([x[0] for x in vtwhatever0List], 0)
+    face0 = np.concatenate([vtwhatever0List[j][1] + nVertCumsumList[j] for j in range(len(vtwhatever0List))])
+    out = [vert0, face0]
+    for j in range(2, len(vtwhatever0List[0])):
+        out.append(np.concatenate([x[j] for x in vtwhatever0List], 0))
+    return tuple(out)
 
 
 def composeMultiShape(point, radius, color, shapeName, ifSolidRatherThanBubble=True, **kwargs):

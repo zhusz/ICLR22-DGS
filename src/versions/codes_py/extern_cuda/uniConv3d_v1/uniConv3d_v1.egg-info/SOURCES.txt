@@ -1,0 +1,8 @@
+setup.py
+uniConv3d_v1.egg-info/PKG-INFO
+uniConv3d_v1.egg-info/SOURCES.txt
+uniConv3d_v1.egg-info/dependency_links.txt
+uniConv3d_v1.egg-info/requires.txt
+uniConv3d_v1.egg-info/top_level.txt
+uniConv3d_v1/cuda/uniConv3d.cpp
+uniConv3d_v1/cuda/uniConv3d_kernel.cu

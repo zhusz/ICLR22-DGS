@@ -1,11 +1,4 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
+from cmath import log
 from ..py_ext.misc_v1 import mkdir_full
 from shutil import rmtree
 from collections import OrderedDict
@@ -129,7 +122,7 @@ def checkPDSRLogDirNew(config, **kwargs):  # It is not functional! Might change 
     assert projRoot.endswith('/')
 
     prefix = projRoot
-    assert(os.path.isdir(prefix + 'v/P/%s/%s/' % (P, D)))  # the logDir must be manually created to the D level.
+    assert os.path.isdir(prefix + 'v/P/%s/%s/' % (P, D)), prefix + 'v/P/%s/%s/' % (P, D)  # the logDir must be manually created to the D level.
     logDir = prefix + 'v/P/%s/%s/%s/%s/' % (P, D, S, R)
     # Check logDir on the disk.
     if ifInitial:
@@ -140,7 +133,7 @@ def checkPDSRLogDirNew(config, **kwargs):  # It is not functional! Might change 
             assert(not os.path.isdir(logDir))
         mkdir_full(logDir)
     else:  # Will always check if there is already an existed logDir. Will raise an error if there is none.
-        assert(os.path.isdir(logDir))
+        assert os.path.isdir(logDir), logDir
 
     # Check config
     if os.path.isfile(logDir + 'config.pkl'):
@@ -184,11 +177,11 @@ def checkPDSRLogDirNew(config, **kwargs):  # It is not functional! Might change 
     mkdir_full(logDir + 'models/')
     mkdir_full(logDir + 'dump/')
     mkdir_full(logDir + 'cache/')
-    mkdir_full(logDir + 'visTrain/')
-    mkdir_full(logDir + 'visVal/')
     mkdir_full(logDir + 'numerical/')
+    mkdir_full(logDir + 'monitorImmediateFlow/')
     mkdir_full(logDir + 'monitorTrain/')
     mkdir_full(logDir + 'monitorVal/')
+    mkdir_full(logDir + 'anomaly/')
     return logDir
 
 

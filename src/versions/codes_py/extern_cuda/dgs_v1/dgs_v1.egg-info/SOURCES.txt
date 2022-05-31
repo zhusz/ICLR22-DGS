@@ -1,0 +1,8 @@
+setup.py
+dgs_v1.egg-info/PKG-INFO
+dgs_v1.egg-info/SOURCES.txt
+dgs_v1.egg-info/dependency_links.txt
+dgs_v1.egg-info/requires.txt
+dgs_v1.egg-info/top_level.txt
+dgs_v1/cuda/dgs.cpp
+dgs_v1/cuda/dgs_kernel.cu

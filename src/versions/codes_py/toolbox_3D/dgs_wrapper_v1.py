@@ -1,15 +1,74 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
+# (tfconda)
 import torch
 import torch.nn as nn
 import dgs_v1.cuda.dgs as dgs_cuda
 import numpy as np
+
+
+class DGS2DLayerFunction(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, input, pCamPersp, fScaleWidth, fScaleHeight):
+        # input: b, c, h, w  # different from dgs_forward
+        # pCamPersp: b, q, 3
+        # fw, fh: (b, )
+        phi, phi_on_i, phi_on_j, debugging_info = dgs_forward(
+            input.permute(0, 2, 3, 1).contiguous(),
+            pCamPersp[:, :, :2].contiguous(), dim_of_debugging_info=0)
+        phi = phi.permute(0, 2, 1).contiguous()  # (B, C, Q)
+        phi_on_i = phi_on_i.permute(0, 2, 1).contiguous()  # (B, C, Q)
+        phi_on_j = phi_on_j.permute(0, 2, 1).contiguous()  # (B, C, Q)
+        debugging_info = debugging_info.permute(0, 2, 1, 3).contiguous()  # (B, C, Q, D)
+        fh_over_z = fScaleHeight[:, None] / pCamPersp[:, :, 2].detach()  # (B, Q)
+        fw_over_z = fScaleWidth[:, None] / pCamPersp[:, :, 2].detach()  # (B, Q)
+        # both two (B, Q) below
+        yCamPerspQueryMap_over_z = pCamPersp[:, :, 1].detach() / pCamPersp[:, :, 2].detach()
+        xCamPerspQueryMap_over_z = pCamPersp[:, :, 0].detach() / pCamPersp[:, :, 2].detach()
+        # All three (B, C, Q) below
+        phi_on_xCam = phi_on_j * fw_over_z[:, None, :]
+        phi_on_yCam = phi_on_i * fh_over_z[:, None, :]
+        phi_on_zCam = - phi_on_i * yCamPerspQueryMap_over_z[:, None, :] \
+                      - phi_on_j * xCamPerspQueryMap_over_z[:, None, :]
+
+        phi4 = torch.stack([phi, phi_on_xCam, phi_on_yCam, phi_on_zCam], 2)  # (B, C, 4, Q)
+        ctx.save_for_backward(
+            fw_over_z, fh_over_z, xCamPerspQueryMap_over_z, yCamPerspQueryMap_over_z,
+            pCamPersp, torch.tensor(input.shape, dtype=torch.int32, device='cpu')
+        )
+        # debugging_info = torch.cat([  # (B, C, Q, D)
+        #     debugging_info, phi_on_i[:, :, :, None], phi_on_j[:, :, :, None],
+        # ], 3)
+        return phi4
+
+    @staticmethod
+    def backward(ctx, grad_phi4):
+        # grad_phi4: b, c, 4(1+3), q
+        # fw_over_z, fh_over_z, xCamPerspQueryMap_over_z, yCamPerspQueryMap_over_z: b, q
+        # pCamPersp: b, q, 3
+        fw_over_z, fh_over_z, xCamPerspQueryMap_over_z, yCamPerspQueryMap_over_z, \
+            pCamPersp, input_size = ctx.saved_tensors
+        input_size = [int(s) for s in input_size]
+        input_size = (input_size[0], input_size[2], input_size[3], input_size[1])
+        grad_input, debugging_info = dgs_backward(
+            input_size,
+            grad_phi4[:, :, 0, :].permute(0, 2, 1).contiguous(),
+            grad_phi4[:, :, 1:, :].permute(0, 3, 1, 2).contiguous(),
+            pCamPersp[:, :, :2].contiguous(),
+            fh_over_z, fw_over_z, yCamPerspQueryMap_over_z, xCamPerspQueryMap_over_z,
+            0,
+        )
+        grad_input = grad_input.permute(0, 3, 1, 2).contiguous()
+        return grad_input, None, None, None
+
+
+dgs2dLayerApply = DGS2DLayerFunction.apply
+
+
+class DGS2DLayer(nn.Module):
+    def __init__(self):
+        super(DGS2DLayer, self).__init__()
+
+    def forward(self, input, grid, fScaleWidth, fScaleHeight):
+        return dgs2dLayerApply(input, grid, fScaleWidth, fScaleHeight)
 
 
 class DGSLayerFunction(torch.autograd.Function):
@@ -219,9 +278,9 @@ class DGS3DLayerFunction(torch.autograd.Function):
         grad_phi4 = grad_phi4.permute(0, 3, 1, 2).contiguous()
         grad_phi4 = torch.stack([
             grad_phi4[:, :, :, 0],
-            grad_phi4[:, :, :, 1] / (sizeX / 2.),
-            grad_phi4[:, :, :, 2] / (sizeY / 2.),
-            grad_phi4[:, :, :, 3] / (sizeZ / 2.),
+            grad_phi4[:, :, :, 1] * (sizeX / 2.),
+            grad_phi4[:, :, :, 2] * (sizeY / 2.),
+            grad_phi4[:, :, :, 3] * (sizeZ / 2.),
         ], 3)
         grad_input, debugging_info = dgs3d_backward(
             input_shape,

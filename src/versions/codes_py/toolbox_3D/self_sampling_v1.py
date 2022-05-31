@@ -1,13 +1,9 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
+# (tfconda)
+from lib2to3.pgen2.pgen import NFAState
+from scipy.misc import face
+import time
 import torch
-from .mesh_v1 import vertInfo2faceVertInfoTHGPU
+from .mesh_v1 import vertInfo2faceVertInfoTHGPU, vertInfo2faceVertInfoNP
 from ..toolbox_torch.general_algorithm_wrapper_v1 import batched_binary_search_over_cumsumed_vec_thgpu
 import numpy as np
 from ..np_ext.data_processing_utils_v1 import d2, determinedArbitraryPermutedVector2correctcorrect
@@ -127,11 +123,9 @@ def mesh_weighted_sampling_given_normal(
     ).long()
     pointFace0_thgpu[pointFace0_thgpu < 0] = 0
     pointFace0_thgpu[pointFace0_thgpu >= nFace] = nFace - 1
-    p1 = torch.rand(num_sampling, device=faceVert0_thgpu.device).float()
-    p2 = torch.rand(num_sampling, device=faceVert0_thgpu.device).float()
-    pLeft = torch.min(p1, p2)
-    pRight = torch.max(p1, p2)
-    pointBary0_thgpu = torch.stack([pLeft, pRight - pLeft, 1. - pRight], 1)
+    p12_thgpu = torch.rand(num_sampling, device=faceVert0_thgpu.device).float()
+    p3_thgpu = torch.rand(num_sampling, device=faceVert0_thgpu.device).float() ** 0.5
+    pointBary0_thgpu = torch.stack([(1 - p12_thgpu) * p3_thgpu, p12_thgpu * p3_thgpu, 1 - p3_thgpu], 1)
 
     # cache
     pointFaceVert0_thgpu = faceVert0_thgpu[pointFace0_thgpu, :, :]
@@ -184,6 +178,54 @@ def mesh_sampling_given_normal_np_simple(num_sampling, faceVert0):
         'point0': point0,
         'pointFace0': pointFace0,
     }
+
+
+def mesh_weighted_sampling_given_normal_np(
+        num_sampling, faceCumsumWeight0, faceVert0, faceNormal0, vertInfo0, faceInfo0, **kwargs):
+    ifFaceNormal0alreadyNormalized = kwargs['ifFaceNormal0alreadyNormalized']
+    cudaDevice = kwargs['cudaDevice']
+
+    assert len(faceVert0.shape) == 3 and faceVert0.shape[1:] == (3, 3)
+    nFace = int(faceVert0.shape[0])
+    assert len(faceNormal0.shape) == 2 and faceNormal0.shape == (nFace, 3)
+    assert len(faceCumsumWeight0.shape) == 1
+    assert faceCumsumWeight0.shape[0] == nFace
+
+    if faceCumsumWeight0[-1] == 0:
+        faceCumsumWeight0 = np.arange(nFace).astype(np.float32)
+    
+    # randomness
+    q = np.random.rand(num_sampling).astype(np.float32) * faceCumsumWeight0[-1]
+    q[0] = 1.e-6 + faceCumsumWeight0[0]
+    # pointFace0 = np.argmax(q[:, None] < faceCumsumWeight0[None, :], axis=1)
+    pointFace0 = batched_binary_search_over_cumsumed_vec_thgpu(
+        values=torch.from_numpy(q).float().to(cudaDevice),
+        cumsumed_vec=torch.from_numpy(faceCumsumWeight0).float().to(cudaDevice),
+    ).detach().cpu().numpy().astype(np.int32)
+    pointFace0[pointFace0 < 0] = 0
+    pointFace0[pointFace0 >= nFace] = nFace - 1
+    p12 = np.random.rand(num_sampling).astype(np.float32)
+    p3 = np.random.rand(num_sampling).astype(np.float32) ** 0.5
+    pointBary0 = np.stack([(1 - p12) * p3, p12 * p3, 1 - p3], 1)
+    
+    if ifFaceNormal0alreadyNormalized:
+        pass
+    else:
+        raise NotImplementedError('Not yet verified')
+        faceNormal0 = faceNormal0 / \
+            np.clip(np.linalg.norm(faceNormal0, ord=2, axis=1)[:, None], a_min=1.e-5, a_max=np.inf)
+
+    pointFaceVert0 = faceVert0[pointFace0, :, :]
+    pointFaceNormal0 = faceNormal0[pointFace0, :]
+    point0 = (pointBary0[:, :, None] * pointFaceVert0).sum(1)
+    pointNormal0 = pointFaceNormal0
+
+    pointVertInfo0 = {}
+    pointFaceInfo0 = {}
+    if len(vertInfo0.keys()) > 0 or len(faceInfo0.keys()) > 0:
+        raise NotImplementedError
+    
+    return point0, pointNormal0, pointFace0, pointVertInfo0, pointFaceInfo0
 
 
 def mesh_weighted_sampling_given_normal_fixed_rand(

@@ -1,0 +1,27 @@
+# Further Code Release for ICLR-22 work
+# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
+# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
+# Released on 05/30/2022.
+
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+#!/bin/sh
+
+# tar-send
+# copies a directory to a remote machine over ssh by tar for blockwise transfer.
+# Borrowed from https://raw.githubusercontent.com/shelhamer/dotfiles/master/bin/tar-send
+
+LOCAL_DIR=$1
+HOST=$2
+THERE_DIR=$3
+if [ $# -eq 3 ]; then
+    tar cpf - $LOCAL_DIR | ssh $HOST "tar xpf - -C $THERE_DIR"
+elif [ $# -eq 4 ]; then
+    SSH_PRIVATE_KEY=$4
+    tar cpf - $LOCAL_DIR | ssh -i $SSH_PRIVATE_KEY $HOST "tar xpf - -C $THERE_DIR"
+else
+    echo Error from tar-send: The number of the input params must be 3 or 4.
+fi
+
+exit

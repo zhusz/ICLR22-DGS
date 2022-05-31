@@ -1,11 +1,4 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
+# from skimage.draw import line_aa, circle
 from matplotlib.cm import get_cmap
 # from ..toolbox_human_pose.obtain_ref_pairs_v1 import obtainRefPairs  # requires proper imports to codes_py in path
 from ..toolbox_bbox.obtain_bbox_from_annotations_v1 import obtain_bbox_np_via_pose
@@ -15,10 +8,10 @@ import cv2
 import numpy as np
 
 
-def to_heatmap(x, cmap=None):
+def to_heatmap(x, vmin=None, vmax=None, cmap=None):
     x = x.astype(np.float32)
-    upperBound = x[np.isfinite(x)].max()
-    lowerBound = x[np.isfinite(x)].min()
+    upperBound = x[np.isfinite(x)].max() if vmax is None else vmax
+    lowerBound = x[np.isfinite(x)].min() if vmin is None else vmin
     x = (x - lowerBound) / (upperBound - lowerBound)
     cm = plt.get_cmap(cmap, 2 ** 16)
     return cm(x)[..., :3]

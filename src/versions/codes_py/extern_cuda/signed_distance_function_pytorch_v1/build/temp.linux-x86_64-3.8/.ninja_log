@@ -1,0 +1,5 @@
+# ninja log v5
+0	8050	1652471637577778747	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/signed_distance_function_pytorch_v1/build/temp.linux-x86_64-3.8/signed_distance_function_v1/cuda/mesh_preprocessing_kernel.o	f345d732194df821
+0	14974	1652471644501723197	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/signed_distance_function_pytorch_v1/build/temp.linux-x86_64-3.8/signed_distance_function_v1/cuda/mesh_preprocessing.o	a4630112f36827af
+0	7976	1652471652897655834	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/signed_distance_function_pytorch_v1/build/temp.linux-x86_64-3.8/signed_distance_function_v1/cuda/sdf_core_cuda_kernel.o	c011f22c64c363e0
+0	15069	1652471659993598900	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/signed_distance_function_pytorch_v1/build/temp.linux-x86_64-3.8/signed_distance_function_v1/cuda/sdf_core_cuda.o	4c6bbce36888682b

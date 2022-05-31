@@ -1,0 +1,40 @@
+# Further Code Release for ICLR-22 work
+# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
+# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
+# Released on 05/30/2022.
+
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+alias ls='ls -G'
+alias ll='ls -alFG'
+alias la='ls -AG'
+alias l='ls -CFG'
+
+alias t2='ssh zhusz@masked1.masked2.masked3.masked4'
+alias t2a='ssh -N -f -L 15501:localhost:5901 zhusz@masked1.masked2.masked3.masked4'
+alias t2b='ssh -N -f -L 15502:localhost:5902 zhusz@masked1.masked2.masked3.masked4'
+alias t2c='ssh -N -f -L 15503:localhost:5903 zhusz@masked1.masked2.masked3.masked4'
+
+export PATH="$HOME/local/Installations/anaconda3/bin:$PATH"
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/zhusz/local/Installations/anaconda3/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/zhusz/local/Installations/anaconda3/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/zhusz/local/Installations/anaconda3/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/zhusz/local/Installations/anaconda3/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+PS1="\u@\h:\w$ "
+
+# export PP_DIR="/Users/zhusz/local/r/pp"
+# export PYTHONPATH=$PP_DIR/src/versions/:$PP_DIR/src/B:$PYTHONPATH

@@ -1,0 +1,85 @@
+# Further Code Release for ICLR-22 work
+# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
+# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
+# Released on 05/30/2022.
+
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/zhusz/local/Installations/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/zhusz/local/Installations/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/zhusz/local/Installations/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/zhusz/local/Installations/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+                                                                                                                                                             
+rm /home/zhusz/.bash_history
+rm /home/zhusz/.python_history
+ 
+alias ap="CUDA_VISIBLE_DEVICES=0 python"
+alias bp="CUDA_VISIBLE_DEVICES=1 python"
+alias cpp="CUDA_VISIBLE_DEVICES=2 python"
+alias dp="CUDA_VISIBLE_DEVICES=3 python"
+alias ep="CUDA_VISIBLE_DEVICES=4 python"
+alias fp="CUDA_VISIBLE_DEVICES=5 python"
+alias gp="CUDA_VISIBLE_DEVICES=6 python"
+alias hp="CUDA_VISIBLE_DEVICES=7 python"
+alias yp="CUDA_VISIBLE_DEVICES=8 python"
+alias zp="CUDA_VISIBLE_DEVICES=9 python"
+ 
+alias abp="CUDA_VISIBLE_DEVICES=0,1 python"
+alias cdp="CUDA_VISIBLE_DEVICES=2,3 python"
+alias efp="CUDA_VISIBLE_DEVICES=4,5 python"
+alias ghp="CUDA_VISIBLE_DEVICES=6,7 python"
+alias yzp="CUDA_VISIBLE_DEVICES=8,9 python"
+alias bap="CUDA_VISIBLE_DEVICES=1,0 python"
+alias dcp="CUDA_VISIBLE_DEVICES=3,2 python"
+alias fep="CUDA_VISIBLE_DEVICES=5,4 python"
+alias hgp="CUDA_VISIBLE_DEVICES=7,6 python"
+alias zyp="CUDA_VISIBLE_DEVICES=9,8 python"
+
+alias oap="CUDA_VISIBLE_DEVICES=0 PYOPENGL_PLATFORM=osmesa python"
+alias obp="CUDA_VISIBLE_DEVICES=1 PYOPENGL_PLATFORM=osmesa python"
+alias ocpp="CUDA_VISIBLE_DEVICES=2 PYOPENGL_PLATFORM=osmesa python"
+alias odp="CUDA_VISIBLE_DEVICES=3 PYOPENGL_PLATFORM=osmesa python"
+alias oep="CUDA_VISIBLE_DEVICES=4 PYOPENGL_PLATFORM=osmesa python"
+alias ofp="CUDA_VISIBLE_DEVICES=5 PYOPENGL_PLATFORM=osmesa python"
+alias ogp="CUDA_VISIBLE_DEVICES=6 PYOPENGL_PLATFORM=osmesa python"
+alias ohp="CUDA_VISIBLE_DEVICES=7 PYOPENGL_PLATFORM=osmesa python"
+alias oyp="CUDA_VISIBLE_DEVICES=8 PYOPENGL_PLATFORM=osmesa python"
+alias ozp="CUDA_VISIBLE_DEVICES=9 PYOPENGL_PLATFORM=osmesa python"
+
+alias op="PYOPENGL_PLATFORM=osmesa python"
+
+alias oabp="CUDA_VISIBLE_DEVICES=0,1 PYOPENGL_PLATFORM=osmesa python"
+alias ocdp="CUDA_VISIBLE_DEVICES=2,3 PYOPENGL_PLATFORM=osmesa python"
+alias oefp="CUDA_VISIBLE_DEVICES=4,5 PYOPENGL_PLATFORM=osmesa python"
+alias oghp="CUDA_VISIBLE_DEVICES=6,7 PYOPENGL_PLATFORM=osmesa python"
+alias oyzp="CUDA_VISIBLE_DEVICES=8,9 PYOPENGL_PLATFORM=osmesa python"
+ 
+alias et="conda activate tfcondb"
+alias eb="conda deactivate"
+ 
+alias matlab="/home/zhusz/local/Installations/matlab/install/bin/matlab"
+ 
+export WORK_DIR=/home/zhusz/local
+export INSTALLATIONS_DIR=
+export PP_DIR=
+export PYTHONPATH=
+ 
+export CUDA_HOME=/usr/local/cuda
+
+alias at="docker exec -it pp bash"

@@ -1,0 +1,8 @@
+setup.py
+general_algorithm_v1.egg-info/PKG-INFO
+general_algorithm_v1.egg-info/SOURCES.txt
+general_algorithm_v1.egg-info/dependency_links.txt
+general_algorithm_v1.egg-info/requires.txt
+general_algorithm_v1.egg-info/top_level.txt
+general_algorithm_v1/cuda/general_algorithm.cpp
+general_algorithm_v1/cuda/general_algorithm_kernel.cu

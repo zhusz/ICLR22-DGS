@@ -1,0 +1,36 @@
+" Further Code Release for ICLR-22 work
+" 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
+" Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
+" Released on 05/30/2022.
+"
+" This source code is licensed under the license found in the
+" LICENSE file in the root directory of this source tree.
+
+let mapleader = ','
+let g:mapleader = ','
+
+nnoremap ; :
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
+noremap J ^
+noremap K $
+" Quickly close the current window
+nnoremap <leader>q :q<CR>
+" Quickly save the current file
+nnoremap <leader>w :w<CR>
+
+inoremap jk <Esc>
+
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+map <space> /
+
+

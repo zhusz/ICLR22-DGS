@@ -1,15 +1,8 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
 # PYOPENGL_PLATFORM=osmesa
 import pyrender
 import trimesh
 import numpy as np
+from .mesh_v1 import vertInfo2faceVertInfoNP
 
 
 # def render_single_mesh_pyrender_backend(vert0, face0, fxywxy, lights=None, renderer=None):
@@ -92,7 +85,7 @@ class PyrenderManager(object):
 
     def add_vertRgb_mesh_via_faceRgb(self, vert0, face0, faceRgb0):
         mesh = trimesh.Trimesh(
-            vertices=vert0, faces=face0,
+            vertices=vert0, faces=face0, process=False
         )
         assert faceRgb0.shape[0] == face0.shape[0]
         assert faceRgb0.shape[1] == 3
@@ -108,7 +101,7 @@ class PyrenderManager(object):
 
     def add_faceRgb_mesh(self, vert0, face0, faceRgb0):
         mesh = trimesh.Trimesh(
-            vertices=vert0, faces=face0,
+            vertices=vert0, faces=face0, process=False,
         )
         assert faceRgb0.shape[0] == face0.shape[0]
         assert faceRgb0.shape[1] == 3
@@ -124,3 +117,8 @@ class PyrenderManager(object):
         return self.renderer.render(self.scene)
 
 
+def vertRgb02faceRgb0(vertRgb0, face0):
+    assert len(vertRgb0.shape) == 2 and vertRgb0.shape[1] == 3
+    faceVertRgb0 = vertInfo2faceVertInfoNP(vertRgb0[None], face0[None])[0]
+    faceRgb0 = faceVertRgb0.mean(1)
+    return faceRgb0

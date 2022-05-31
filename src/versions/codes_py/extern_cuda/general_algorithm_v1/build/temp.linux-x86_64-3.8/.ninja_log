@@ -1,0 +1,3 @@
+# ninja log v5
+1	9093	1652471471215112842	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/general_algorithm_v1/build/temp.linux-x86_64-3.8/general_algorithm_v1/cuda/general_algorithm_kernel.o	7cf7a0574666940
+0	17045	1652471479167049104	/home/zhusz/local/r/pp/src/versions/codes_py/extern_cuda/general_algorithm_v1/build/temp.linux-x86_64-3.8/general_algorithm_v1/cuda/general_algorithm.o	1afd9f7ad7f95153

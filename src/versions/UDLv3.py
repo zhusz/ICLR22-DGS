@@ -1,11 +1,3 @@
-# Code Release for ICLR-22 work
-# 'Differentiable Gradient Sampling for Learning Implicit 3D Scene Reconstructions from a Single Image'
-# Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
-# Released on 04/25/2022.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
 from codes_py.np_ext.mat_io_v1 import pLoadMat, pProcessMat
 from codes_py.np_ext.np_image_io_v1 import imread as my_imread
 from codes_py.py_ext.misc_v1 import cellstr2liststr
@@ -86,6 +78,14 @@ def udl(tag, dataset=None, index=None):
             for k in pkl.keys():
                 mat[k] = pkl[k]
             return mat
+        if ts[2] in ['semanticScanrefer']:
+            with open(v_root + 'Z/semanticScanrefer/semanticScanrefer.pkl', 'rb') as f:
+                pkl = pickle.load(f)
+            return pkl
+        if ts[2] in ['semanticOpenrooms']:
+            with open(v_root + 'Z/semanticOpenrooms/semanticOpenrooms.pkl', 'rb') as f:
+                pkl = pickle.load(f)
+            return pkl
         if ts[2] in ['semanticFront']:
             with open(v_root + 'Z/semanticFront/semanticFront.pkl', 'rb') as f:
                 pkl = pickle.load(f)
